@@ -1,5 +1,6 @@
 #include "CrawlbackWrapper.h"
 
+// Crashes right now
 void on_cb(crawlback_Event * ev) {
   Rcpp::Rcout << "Starting on_cb" << std::endl;
   r_Function *f = (r_Function *) ev->data;
@@ -19,7 +20,7 @@ CrawlbackWrapper::~CrawlbackWrapper() {
   crawlback_delete(_crawlback_Object);
 }
 
-// Memory leak.  Just for demo
+
 void CrawlbackWrapper::addStartCallback(Rcpp::Function f) {
 
   r_Function *r_func = (r_Function *) malloc(sizeof(r_Function));
