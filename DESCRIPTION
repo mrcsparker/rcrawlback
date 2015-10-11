@@ -1,12 +1,12 @@
 Package: rcrawlback
 Type: Package
-Title: What the Package Does (Title Case)
+Title: Testing callbacks in R/Rcpp
 Version: 0.1
 Date: 2015-10-08
-Author: Who wrote it
-Maintainer: Who to complain to <yourfault@somewhere.net>
-Description: More about what it does (maybe more than one line)
-License: What license is it under?
+Author: Chris Parker
+Maintainer: Chris Parker <mrcsparker@gmail.com>
+Description: This software will change the world.  Not really.
+License: GPL-3
 LazyData: TRUE
 Imports:
     Rcpp (>= 0.12.1)
