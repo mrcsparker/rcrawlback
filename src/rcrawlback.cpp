@@ -15,20 +15,14 @@ XPtr<CrawlbackWrapper> r_crawlback_new() {
 }
 
 // [[Rcpp::export]]
-void r_crawlback_add_start_callback(XPtr<CrawlbackWrapper> c, Function f) {
-  c->addStartCallback(f);
-}
+void r_crawlback_run(XPtr<CrawlbackWrapper> c,
+                     Function& onStart,
+                     Function& onRun,
+                     Function& onEnd) {
 
-// [[Rcpp::export]]
-void r_crawlback_run(XPtr<CrawlbackWrapper> c) {
+  c->addStartCallback(onStart);
+  c->addRunCallback(onRun);
+  c->addEndCallback(onEnd);
   c->run();
-}
-
-// [[Rcpp::export]]
-List rcpp_hello() {
-  CharacterVector x = CharacterVector::create("foo", "bar");
-  NumericVector y   = NumericVector::create(0.0, 1.0);
-  List z            = List::create(x, y);
-  return z;
 }
 

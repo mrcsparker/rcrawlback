@@ -10,36 +10,37 @@ typedef enum {
   EVENT_START,
   EVENT_RUN,
   EVENT_END
-} crawlback_CallbackType;
+} crawlback_callback_type;
 
 /* Mock event struct */
 typedef struct {
   void *data;
-} crawlback_Event;
+} crawlback_event;
 
 /* Callback fp */
-typedef void (*crawlback_Callback)(crawlback_Event *);
+typedef void (*crawlback_callback)(crawlback_event* ev);
 
 /* Main "object" that stores callbacks */
 typedef struct {
-  crawlback_Event *start_ev;
-  crawlback_Callback start_cb;
+  crawlback_event *start_ev;
+  crawlback_callback start_cb;
   int start_cb_set;
 
-  crawlback_Event *run_ev;
-  crawlback_Callback run_cb;
+  crawlback_event *run_ev;
+  crawlback_callback run_cb;
   int run_cb_set;
 
-  crawlback_Event *end_ev;
-  crawlback_Callback end_cb;
+  crawlback_event *end_ev;
+  crawlback_callback end_cb;
   int end_cb_set;
 
-} crawlback_Object;
+} crawlback_object;
 
-crawlback_Object * crawlback_new(void);
-void crawlback_addCallback(crawlback_Object * c, crawlback_CallbackType callback_type, crawlback_Callback callback, void * d);
-void crawlback_run(crawlback_Object * c);
-void crawlback_delete(crawlback_Object * c);
+crawlback_object * crawlback_new(void);
+crawlback_object * crawlback_add_callback(crawlback_object * c, crawlback_callback_type callback_type,
+                            crawlback_callback callback, void * d);
+crawlback_object * crawlback_run(crawlback_object * c);
+void crawlback_delete(crawlback_object * c);
 
 #ifdef __cplusplus
 } // extern "C"

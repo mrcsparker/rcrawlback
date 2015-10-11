@@ -5,15 +5,7 @@ r_crawlback_new <- function() {
     .Call('rcrawlback_r_crawlback_new', PACKAGE = 'rcrawlback')
 }
 
-r_crawlback_add_start_callback <- function(c, f) {
-    invisible(.Call('rcrawlback_r_crawlback_add_start_callback', PACKAGE = 'rcrawlback', c, f))
-}
-
-r_crawlback_run <- function(c) {
-    invisible(.Call('rcrawlback_r_crawlback_run', PACKAGE = 'rcrawlback', c))
-}
-
-rcpp_hello <- function() {
-    .Call('rcrawlback_rcpp_hello', PACKAGE = 'rcrawlback')
+r_crawlback_run <- function(c, onStart, onRun, onEnd) {
+    invisible(.Call('rcrawlback_r_crawlback_run', PACKAGE = 'rcrawlback', c, onStart, onRun, onEnd))
 }
 

@@ -1,37 +1,46 @@
 #include "CrawlbackWrapper.h"
+#include <assert.h>
 
-// Crashes right now
-void on_cb(crawlback_Event * ev) {
-  Rcpp::Rcout << "Starting on_cb" << std::endl;
-  r_Function *f = (r_Function *) ev->data;
-  Rcpp::Function * arr_call = f->function;
-  Rcpp::Rcout << "Making call" <<  std::endl;
-  (*arr_call)();
+void on_callback(crawlback_event * ev) {
+  assert(ev != NULL);
+  assert(ev->data != NULL);
+  assert(ev->data->function != NULL);
+  CallbackFunction *f = (CallbackFunction *) ev->data;
+  const Rcpp::Function *arrRCall = f->function;
+  (*arrRCall)();
 }
 
 CrawlbackWrapper::CrawlbackWrapper() {
-  _crawlback_Object = crawlback_new();
+  _crawlbackObject = crawlback_new();
 }
 
 CrawlbackWrapper::~CrawlbackWrapper() {
-  for (r_Function *f : _crawlback_Functions) {
-    free(f);
+  for (CallbackFunction *f : _crawlbackFunctions) {
+    std::cout << f->message << std::endl;
+    delete f;
   }
-  crawlback_delete(_crawlback_Object);
+  crawlback_delete(_crawlbackObject);
 }
 
+void CrawlbackWrapper::addStartCallback(const Rcpp::Function& f) {
+  CallbackFunction *callbackFunction = new CallbackFunction(&f, _crawlbackObject, "start_cb");
+  crawlback_add_callback(_crawlbackObject, EVENT_START, on_callback, callbackFunction);
+  _crawlbackFunctions.push_back(callbackFunction);
+}
 
-void CrawlbackWrapper::addStartCallback(Rcpp::Function f) {
+void CrawlbackWrapper::addRunCallback(const Rcpp::Function& f) {
+  CallbackFunction *callbackFunction = new CallbackFunction(&f, _crawlbackObject, "run_cb");
+  crawlback_add_callback(_crawlbackObject, EVENT_RUN, on_callback, callbackFunction);
+  _crawlbackFunctions.push_back(callbackFunction);
+}
 
-  r_Function *r_func = (r_Function *) malloc(sizeof(r_Function));
-  r_func->function = &f;
-
-  _crawlback_Functions.push_back(r_func);
-
-  crawlback_addCallback(_crawlback_Object, EVENT_START, on_cb, r_func);
+void CrawlbackWrapper::addEndCallback(const Rcpp::Function& f) {
+  CallbackFunction *callbackFunction = new CallbackFunction(&f, _crawlbackObject, "end_cb");
+  crawlback_add_callback(_crawlbackObject, EVENT_END, on_callback, callbackFunction);
+  _crawlbackFunctions.push_back(callbackFunction);
 }
 
 void CrawlbackWrapper::run() {
-  crawlback_run(_crawlback_Object);
+  crawlback_run(_crawlbackObject);
 }
 

@@ -1,26 +1,31 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <memory.h>
+#include <assert.h>
 
 #include "crawlback.h"
 
-crawlback_Object * crawlback_new() {
-  crawlback_Object *c = (crawlback_Object *)malloc(sizeof(crawlback_Object));
-  memset(c, 0, sizeof(crawlback_Object));
+crawlback_object * crawlback_new() {
+  crawlback_object *c = (crawlback_object *)malloc(sizeof(crawlback_object));
+  assert(c != NULL);
+  memset(c, 0, sizeof(crawlback_object));
   c->start_cb_set = 0;
   c->run_cb_set = 0;
   c->end_cb_set = 0;
   return c;
 }
 
-crawlback_Event * _create_event(void * data) {
-  crawlback_Event *e = (crawlback_Event *) malloc(sizeof(crawlback_Event));
-  memset(e, 0, sizeof(crawlback_Event));
+crawlback_event * _create_event(void * data) {
+  crawlback_event *e = (crawlback_event *) malloc(sizeof(crawlback_event));
+  assert(e != NULL);
+  memset(e, 0, sizeof(crawlback_event));
   e->data = data;
+  assert(e->data != NULL);
   return e;
 }
 
-void crawlback_addCallback(crawlback_Object * c, crawlback_CallbackType callback_type, crawlback_Callback callback, void * d) {
+crawlback_object * crawlback_add_callback(crawlback_object * c, crawlback_callback_type callback_type,
+                            crawlback_callback callback, void * d) {
   switch(callback_type) {
   case EVENT_START:
     c->start_cb = callback;
@@ -38,9 +43,11 @@ void crawlback_addCallback(crawlback_Object * c, crawlback_CallbackType callback
     c->end_cb_set = 1;
     break;
   }
+
+  return c;
 }
 
-void crawlback_run(crawlback_Object * c) {
+crawlback_object * crawlback_run(crawlback_object * c) {
   if (c->start_cb_set == 1) {
     c->start_cb(c->start_ev);
   }
@@ -50,9 +57,11 @@ void crawlback_run(crawlback_Object * c) {
   if (c->end_cb_set == 1) {
     c->end_cb(c->end_ev);
   }
+
+  return c;
 }
 
-void crawlback_delete(crawlback_Object * c) {
+void crawlback_delete(crawlback_object * c) {
   if (c->start_ev != NULL) {
     free(c->start_ev);
   }

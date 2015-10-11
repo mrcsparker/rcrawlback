@@ -5,22 +5,34 @@
 #include "crawlback.h"
 #include <Rcpp.h>
 
+#define DBG(MSG,X) Rprintf("%20s SEXP=<%p>. Function=%p\n", MSG, (SEXP)X, &X ) ;
+
 // Rcpp Function struct
-typedef struct {
-  Rcpp::Function *function;
-} r_Function;
+class CallbackFunction {
+public:
+  CallbackFunction(const Rcpp::Function *f, crawlback_object *o, std::string msg) {
+    function = f;
+    obj = o;
+    message = msg;
+  }
+  const Rcpp::Function *function;
+  crawlback_object *obj;
+  std::string message;
+};
 
 class CrawlbackWrapper {
 public:
   CrawlbackWrapper();
   ~CrawlbackWrapper();
 
-  void addStartCallback(Rcpp::Function f);
+  void addStartCallback(const Rcpp::Function& f);
+  void addRunCallback(const Rcpp::Function& f);
+  void addEndCallback(const Rcpp::Function& f);
   void run();
 
 private:
-  crawlback_Object * _crawlback_Object;
-  std::vector<r_Function *> _crawlback_Functions;
+  crawlback_object * _crawlbackObject;
+  std::vector<CallbackFunction *> _crawlbackFunctions;
 };
 
 #endif /* __CRAWLBACK_WRAPPER_H__ */

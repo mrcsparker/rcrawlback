@@ -16,34 +16,16 @@ BEGIN_RCPP
     return __result;
 END_RCPP
 }
-// r_crawlback_add_start_callback
-void r_crawlback_add_start_callback(XPtr<CrawlbackWrapper> c, Function f);
-RcppExport SEXP rcrawlback_r_crawlback_add_start_callback(SEXP cSEXP, SEXP fSEXP) {
-BEGIN_RCPP
-    Rcpp::RNGScope __rngScope;
-    Rcpp::traits::input_parameter< XPtr<CrawlbackWrapper> >::type c(cSEXP);
-    Rcpp::traits::input_parameter< Function >::type f(fSEXP);
-    r_crawlback_add_start_callback(c, f);
-    return R_NilValue;
-END_RCPP
-}
 // r_crawlback_run
-void r_crawlback_run(XPtr<CrawlbackWrapper> c);
-RcppExport SEXP rcrawlback_r_crawlback_run(SEXP cSEXP) {
+void r_crawlback_run(XPtr<CrawlbackWrapper> c, Function& onStart, Function& onRun, Function& onEnd);
+RcppExport SEXP rcrawlback_r_crawlback_run(SEXP cSEXP, SEXP onStartSEXP, SEXP onRunSEXP, SEXP onEndSEXP) {
 BEGIN_RCPP
     Rcpp::RNGScope __rngScope;
     Rcpp::traits::input_parameter< XPtr<CrawlbackWrapper> >::type c(cSEXP);
-    r_crawlback_run(c);
+    Rcpp::traits::input_parameter< Function& >::type onStart(onStartSEXP);
+    Rcpp::traits::input_parameter< Function& >::type onRun(onRunSEXP);
+    Rcpp::traits::input_parameter< Function& >::type onEnd(onEndSEXP);
+    r_crawlback_run(c, onStart, onRun, onEnd);
     return R_NilValue;
-END_RCPP
-}
-// rcpp_hello
-List rcpp_hello();
-RcppExport SEXP rcrawlback_rcpp_hello() {
-BEGIN_RCPP
-    Rcpp::RObject __result;
-    Rcpp::RNGScope __rngScope;
-    __result = Rcpp::wrap(rcpp_hello());
-    return __result;
 END_RCPP
 }
